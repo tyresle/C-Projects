@@ -1,0 +1,164 @@
+//Programmer: Tiffany Tran
+//Class: CS3060
+//Purpose: This program will allow users to play a tic tac toe game. The plays will alternate between Player X and Player O, with Player X starting first.
+//The game will end once someone wins or if the game board is full. 
+
+#include <iostream>
+using namespace std;
+
+void displayBoard(char[3][3]);
+void checkWin(char[3][3], bool&, bool&);
+bool boardIsFull(char[3][3]);
+
+int main() {
+	char board[3][3];
+	int row, col, i = 0;
+	bool xWin = false, oWin = false, drawCondition = false ;
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			board[i][j] = '*';
+			cout << board[i][j];
+		}
+		cout << endl;
+	}//INITIALIZE THE BOARD
+
+	
+	while (xWin == false && oWin == false && drawCondition==false) {
+		if (i % 2 == 0) {
+			cout << "Enter player X, row and column: ";
+			cin >> row >> col;
+			while (board[row-1][col-1] != '*' || ((row < 1) || (row > 3)) || ((col < 1) || (col > 3))) {
+				cout << "An invalid entry has been entered (you can't play on an occupied positon on the board, and row and column can only be from 1-3). Please enter again: ";
+				cin >> row >> col;
+			}//while
+			board[row - 1][col - 1] = 'X';
+			displayBoard(board);
+			checkWin(board, xWin, oWin);
+			if (xWin == true) {
+				cout << "Player X wins!";
+				xWin = true;
+			}
+			else if (oWin == true) {
+				cout << "Player O wins!";
+				oWin = true;
+			}
+		}//if condition for player X
+		if (i % 2 == 1) {
+			cout << "Enter player O, row and column: ";
+			cin >> row >> col;
+			while (board[row-1][col-1] != '*' || ((row < 1) || (row > 3)) || ((col < 1) || (col > 3))) {
+				cout << "An invalid entry has been entered (you can't play on an occupied positon on the board, and row and column can only be from 1-3). Please enter again: ";
+				cin >> row >> col;
+			}//while
+			board[row - 1][col - 1] = 'O';
+			displayBoard(board);
+			checkWin(board, xWin, oWin);
+			if (xWin == true) {
+				cout << "Player X wins!";
+				xWin = true;
+			}
+			else if (oWin == true) {
+				cout << "Player O wins!";
+				oWin = true;
+			}
+		}
+		if (boardIsFull(board) == true) {
+			cout << "Draw! No one wins.";
+			drawCondition = true;
+		}
+		i++;
+	}//while
+}//main
+void displayBoard(char board[3][3]) {
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			cout << board[i][j];
+		}
+		cout << endl;
+	}
+}
+void checkWin(char board[3][3], bool& xWin, bool& oWin) {
+	xWin = false, oWin = false;
+	int diagXCounter, diagOCounter;
+	for (int i = 0; i < 3; i++) {
+		int xCounter = 0, oCounter = 0;
+		for (int j = 0; j < 3; j++) {
+			if (board[i][j] == 'X') {
+				xCounter++;
+			}
+			else if (board[i][j] == 'O') {
+				oCounter++;
+			}
+
+		}//column iteration
+		if (xCounter == 3) {
+			xWin = true;
+		}
+		else if (oCounter == 3) {
+			oWin = true; 
+		}
+	}//THIS CHECKS FOR HORIZONTAL WINS
+	for (int i = 0; i < 3; i++) {
+		int xCounter = 0, oCounter = 0;
+		for (int j = 0; j < 3; j++) {
+			if (board[j][i] == 'X') {
+				xCounter++;
+			}
+			else if (board[j][i] == 'O') {
+				oCounter++;
+			}
+		}
+		if (xCounter == 3) {
+			xWin = true;
+		}
+		else if (oCounter == 3) {
+			oWin = true;
+		}
+	}//THIS CHECKS FOR VERTICAL WINS
+	diagXCounter = 0, diagOCounter = 0;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (board[i][j] == 'X' && (i==j)) {
+				diagXCounter++;
+			}
+			else if (board[i][j] == 'O' && (i == j)) {
+				diagOCounter++;
+			}
+		}
+	}
+	if (diagXCounter == 3) {
+		xWin = true;
+	}
+	if (diagOCounter == 3) {
+		oWin = true;
+	}//CHECKS THE DOWNWARD DIAGONAL FOR WINS
+
+	diagOCounter = 0, diagXCounter = 0;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if ((board[i][j] == 'X' && (i == 0) && (j==2)) || (board[i][j] == 'X' && (i == 1) && (j == 1)) || (board[i][j] == 'X' && (i == 2) && (j == 0))) {
+				diagXCounter++;
+			}
+			else if ((board[i][j] == 'O' && (i == 0) && (j == 2)) || (board[i][j] == 'O' && (i == 1) && (j == 1)) || (board[i][j] == 'O' && (i == 2) && (j == 0))) {
+				diagOCounter++;
+			}
+		}
+	}
+	if (diagXCounter == 3) {
+		xWin = true;
+	}
+	if (diagOCounter == 3) {
+		oWin = true;
+	}
+}
+bool boardIsFull(char board[3][3]) {//CHECK IF ALL PLAYS ARE EXHAUSTED, THEN THAT MEANS THE BOARD IS FULL
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (board[i][j]=='*') {
+				return false;
+			}
+		}
+	}
+	return true;
+}
